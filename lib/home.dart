@@ -8,8 +8,32 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  TextEditingController _controllerAlcool = TextEditingController();
-  TextEditingController _controllerGasolina = TextEditingController();
+  final TextEditingController _controllerAlcool = TextEditingController();
+  final TextEditingController _controllerGasolina = TextEditingController();
+
+  String _mensagem = "";
+
+  void _calcular() {
+    double? precoAlcool = double.tryParse(_controllerAlcool.text);
+    double? precoGasolina = double.tryParse(_controllerGasolina.text);
+
+    if (precoAlcool == null || precoGasolina == null) {
+      setState(() {
+        _mensagem =
+            "Número inválido, digite números maiores que 0 e utilizando (.)";
+      });
+    } else {
+      if ((precoAlcool / precoGasolina) >= 0.7) {
+        setState(() {
+          _mensagem = "Melhor abastecer com GASOLINA";
+        });
+      } else {
+        setState(() {
+          _mensagem = "Melhor abastecer com ÁLCOOL";
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +95,7 @@ class _HomeState extends State<Home> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: _calcular,
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: const Color.fromRGBO(63, 81, 143, 1),
@@ -89,12 +113,12 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 25),
+                Padding(
+                  padding: const EdgeInsets.only(top: 25),
                   child: Text(
-                    "Resultado.",
+                    _mensagem,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       color: Color.fromRGBO(63, 81, 143, 1),
                       fontWeight: FontWeight.bold,
